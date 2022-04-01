@@ -8,6 +8,7 @@ import com.lenovo.leos.sign.v2.SignatureNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.security.cert.X509Certificate;
+import java.util.Arrays;
 
 /**
  * @author: hsicen
@@ -36,6 +37,11 @@ public class V2SchemeUtil {
             X509Certificate[][] signs = ApkSignatureSchemeV2Verifier.verify(apkFile);
             if (signs != null && signs.length > 0) {
                 System.out.println("签名MD5: " + Base64.encodeToString(signs[0][0].getPublicKey().getEncoded(), Base64.DEFAULT));
+                Arrays.stream(signs).flatMap(Arrays::stream).forEach(x509 -> {
+                    if (x509 != null) {
+                        System.out.println("签名证书: " + Base64.encodeToString(x509.getPublicKey().getEncoded(), Base64.DEFAULT));
+                    }
+                });
             }
         } catch (SignatureNotFoundException | IOException e) {
             e.printStackTrace();
