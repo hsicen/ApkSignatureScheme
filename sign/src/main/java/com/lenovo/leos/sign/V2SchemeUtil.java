@@ -2,13 +2,13 @@ package com.lenovo.leos.sign;
 
 import com.lenovo.leos.sign.v2.ApkSignatureSchemeV2Verifier;
 import com.lenovo.leos.sign.v2.Base64;
+import com.lenovo.leos.sign.v2.MD5Util;
 import com.lenovo.leos.sign.v2.SignatureInfo;
 import com.lenovo.leos.sign.v2.SignatureNotFoundException;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.security.cert.X509Certificate;
-import java.util.Arrays;
 
 /**
  * @author: hsicen
@@ -32,21 +32,21 @@ public class V2SchemeUtil {
         return ApkSignatureSchemeV2Verifier.verify(apkFile);
     }
 
-    public static String getPublicKeyString(String apkFile) {
+    /**** 返回公钥的MD5值*/
+    public static String publicKeyString(String apkFile) {
+        String keyString = "";
+
         try {
             X509Certificate[][] signs = ApkSignatureSchemeV2Verifier.verify(apkFile);
             if (signs != null && signs.length > 0) {
-                System.out.println("签名MD5: " + Base64.encodeToString(signs[0][0].getPublicKey().getEncoded(), Base64.DEFAULT));
-                Arrays.stream(signs).flatMap(Arrays::stream).forEach(x509 -> {
-                    if (x509 != null) {
-                        System.out.println("签名证书: " + Base64.encodeToString(x509.getPublicKey().getEncoded(), Base64.DEFAULT));
-                    }
-                });
+                String baseStr = Base64.encodeToString(signs[0][0].getPublicKey().getEncoded(), Base64.DEFAULT);
+                keyString = MD5Util.encoding(baseStr);
+                System.out.println("签名MD5: " + keyString);
             }
         } catch (SignatureNotFoundException | IOException e) {
             e.printStackTrace();
         }
 
-        return "v2_signature_scheme_public_key_";
+        return keyString;
     }
 }
