@@ -1,4 +1,4 @@
-package com.lenovo.leos.sign.v2;
+package com.lenovo.leos.sign;
 
 import java.math.BigInteger;
 import java.security.InvalidKeyException;

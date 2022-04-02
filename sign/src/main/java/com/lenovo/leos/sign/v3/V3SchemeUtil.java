@@ -1,10 +1,9 @@
-package com.lenovo.leos.sign;
+package com.lenovo.leos.sign.v3;
 
-import com.lenovo.leos.sign.v2.ApkSignatureSchemeV2Verifier;
-import com.lenovo.leos.sign.v2.Base64;
-import com.lenovo.leos.sign.v2.MD5Util;
-import com.lenovo.leos.sign.v2.SignatureInfo;
-import com.lenovo.leos.sign.v2.SignatureNotFoundException;
+import com.lenovo.leos.sign.Base64;
+import com.lenovo.leos.sign.MD5Util;
+import com.lenovo.leos.sign.SignatureInfo;
+import com.lenovo.leos.sign.SignatureNotFoundException;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -14,19 +13,20 @@ import java.security.cert.X509Certificate;
  * @author: hsicen
  * @date: 2022/4/1 10:23
  * @email: codinghuang@163.com
- * description: V2SchemeUtil
+ * description: V3SchemeUtil
  */
-public class V2SchemeUtil {
+@SuppressWarnings("ALL")
+public class V3SchemeUtil {
 
     /**
-     * 判断是否是V2签名
+     * 判断是否是V3签名
      *
      * @param apkFile 文件路径
-     * @return true:是V2签名，false:不是V2签名
+     * @return true:是V3签名，false:不是V3签名
      * @throws IOException IO异常
      */
     public static boolean hasSignature(String apkFile) throws IOException {
-        return ApkSignatureSchemeV2Verifier.hasSignature(apkFile);
+        return ApkSignatureSchemeV3Verifier.hasSignature(apkFile);
     }
 
     /**
@@ -40,7 +40,7 @@ public class V2SchemeUtil {
     public static SignatureInfo findSignature(String apkFile)
             throws IOException, SignatureNotFoundException {
         RandomAccessFile apk = new RandomAccessFile(apkFile, "r");
-        return ApkSignatureSchemeV2Verifier.findSignature(apk);
+        return ApkSignatureSchemeV3Verifier.findSignature(apk);
     }
 
     /**
@@ -51,8 +51,8 @@ public class V2SchemeUtil {
      * @throws IOException                IO异常
      * @throws SignatureNotFoundException 签名不存在异常
      */
-    public static X509Certificate[][] verify(String apkFile) throws IOException, SignatureNotFoundException {
-        return ApkSignatureSchemeV2Verifier.verify(apkFile);
+    public static ApkSignatureSchemeV3Verifier.VerifiedSigner verify(String apkFile) throws IOException, SignatureNotFoundException {
+        return ApkSignatureSchemeV3Verifier.verify(apkFile);
     }
 
     /**
@@ -65,9 +65,11 @@ public class V2SchemeUtil {
         String keyString = "";
 
         try {
-            X509Certificate[][] signs = ApkSignatureSchemeV2Verifier.verify(apkFile);
-            if (signs != null && signs.length > 0) {
-                String baseStr = Base64.encodeToString(signs[0][0].getPublicKey().getEncoded(), Base64.DEFAULT);
+            ApkSignatureSchemeV3Verifier.VerifiedSigner signs = ApkSignatureSchemeV3Verifier.verify(apkFile);
+            if (signs.certs != null && signs.certs.length > 0) {
+                X509Certificate[] certs = signs.certs;
+
+                String baseStr = Base64.encodeToString(certs[0].getPublicKey().getEncoded(), Base64.DEFAULT);
                 keyString = MD5Util.encoding(baseStr);
                 System.out.println("签名MD5: " + keyString);
             }

@@ -1,7 +1,7 @@
-package com.lenovo.leos.sign;
+package com.lenovo.leos.sign.v1;
 
+import com.lenovo.leos.sign.SignatureNotFoundException;
 import com.lenovo.leos.sign.v2.ApkSignatureSchemeV2Verifier;
-import com.lenovo.leos.sign.v2.SignatureNotFoundException;
 
 import java.io.IOException;
 import java.security.cert.X509Certificate;

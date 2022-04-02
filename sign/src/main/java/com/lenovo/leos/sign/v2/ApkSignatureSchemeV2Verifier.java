@@ -1,15 +1,20 @@
 package com.lenovo.leos.sign.v2;
 
-import static com.lenovo.leos.sign.v2.ApkSigningBlockUtils.CONTENT_DIGEST_VERITY_CHUNKED_SHA256;
-import static com.lenovo.leos.sign.v2.ApkSigningBlockUtils.compareSignatureAlgorithm;
-import static com.lenovo.leos.sign.v2.ApkSigningBlockUtils.getContentDigestAlgorithmJcaDigestAlgorithm;
-import static com.lenovo.leos.sign.v2.ApkSigningBlockUtils.getLengthPrefixedSlice;
-import static com.lenovo.leos.sign.v2.ApkSigningBlockUtils.getSignatureAlgorithmContentDigestAlgorithm;
-import static com.lenovo.leos.sign.v2.ApkSigningBlockUtils.getSignatureAlgorithmJcaKeyAlgorithm;
-import static com.lenovo.leos.sign.v2.ApkSigningBlockUtils.getSignatureAlgorithmJcaSignatureAlgorithm;
-import static com.lenovo.leos.sign.v2.ApkSigningBlockUtils.isSupportedSignatureAlgorithm;
-import static com.lenovo.leos.sign.v2.ApkSigningBlockUtils.readLengthPrefixedByteArray;
+import static com.lenovo.leos.sign.ApkSigningBlockUtils.CONTENT_DIGEST_VERITY_CHUNKED_SHA256;
+import static com.lenovo.leos.sign.ApkSigningBlockUtils.compareSignatureAlgorithm;
+import static com.lenovo.leos.sign.ApkSigningBlockUtils.getContentDigestAlgorithmJcaDigestAlgorithm;
+import static com.lenovo.leos.sign.ApkSigningBlockUtils.getLengthPrefixedSlice;
+import static com.lenovo.leos.sign.ApkSigningBlockUtils.getSignatureAlgorithmContentDigestAlgorithm;
+import static com.lenovo.leos.sign.ApkSigningBlockUtils.getSignatureAlgorithmJcaKeyAlgorithm;
+import static com.lenovo.leos.sign.ApkSigningBlockUtils.getSignatureAlgorithmJcaSignatureAlgorithm;
+import static com.lenovo.leos.sign.ApkSigningBlockUtils.isSupportedSignatureAlgorithm;
+import static com.lenovo.leos.sign.ApkSigningBlockUtils.readLengthPrefixedByteArray;
 
+import com.lenovo.leos.sign.ApkSigningBlockUtils;
+import com.lenovo.leos.sign.Pair;
+import com.lenovo.leos.sign.SignatureInfo;
+import com.lenovo.leos.sign.SignatureNotFoundException;
+import com.lenovo.leos.sign.VerbatimX509Certificate;
 import com.lenovo.leos.sign.v3.ApkSignatureSchemeV3Verifier;
 
 import java.io.ByteArrayInputStream;
@@ -330,5 +335,21 @@ public class ApkSignatureSchemeV2Verifier {
             }
         }
         return;
+    }
+
+    public static class VerifiedSigner {
+        public final X509Certificate[][] certs;
+
+        public final byte[] verityRootHash;
+        // Algorithm -> digest map of signed digests in the signature.
+        // All these are verified if requested.
+        public final Map<Integer, byte[]> contentDigests;
+
+        public VerifiedSigner(X509Certificate[][] certs, byte[] verityRootHash,
+                              Map<Integer, byte[]> contentDigests) {
+            this.certs = certs;
+            this.verityRootHash = verityRootHash;
+            this.contentDigests = contentDigests;
+        }
     }
 }

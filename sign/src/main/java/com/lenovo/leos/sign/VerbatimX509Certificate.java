@@ -1,4 +1,4 @@
-package com.lenovo.leos.sign.v2;
+package com.lenovo.leos.sign;
 
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
@@ -8,11 +8,11 @@ import java.util.Arrays;
  * For legacy reasons we need to return exactly the original encoded certificate bytes, instead
  * of letting the underlying implementation have a shot at re-encoding the data.
  */
-class VerbatimX509Certificate extends WrappedX509Certificate {
+public class VerbatimX509Certificate extends WrappedX509Certificate {
     private final byte[] mEncodedVerbatim;
     private int mHash = -1;
 
-    VerbatimX509Certificate(X509Certificate wrapped, byte[] encodedVerbatim) {
+    public VerbatimX509Certificate(X509Certificate wrapped, byte[] encodedVerbatim) {
         super(wrapped);
         this.mEncodedVerbatim = encodedVerbatim;
     }
