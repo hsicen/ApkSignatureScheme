@@ -12,9 +12,9 @@ import java.security.cert.X509Certificate;
  * @email: codinghuang@163.com
  * description: 签名工具类
  */
-public class V1SchemeUtil {
+class V1SchemeUtil {
 
-    public static String getPublicKeyString(String apkFile) {
+    private static String getPublicKeyString(String apkFile) {
         try {
             X509Certificate[][] signs = ApkSignatureSchemeV2Verifier.verify(apkFile);
         } catch (SignatureNotFoundException | IOException e) {

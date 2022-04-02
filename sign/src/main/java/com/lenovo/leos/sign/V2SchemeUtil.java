@@ -18,21 +18,49 @@ import java.security.cert.X509Certificate;
  */
 public class V2SchemeUtil {
 
+    /**
+     * 判断是否是V2签名
+     *
+     * @param apkFile 文件路径
+     * @return true:是V2签名，false:不是V2签名
+     * @throws IOException IO异常
+     */
     public static boolean hasSignature(String apkFile) throws IOException {
         return ApkSignatureSchemeV2Verifier.hasSignature(apkFile);
     }
 
+    /**
+     * 获取签名block content信息
+     *
+     * @param apkFile apk文件路径
+     * @return 签名信息
+     * @throws IOException                IO异常
+     * @throws SignatureNotFoundException 签名不存在异常
+     */
     public static SignatureInfo findSignature(String apkFile)
             throws IOException, SignatureNotFoundException {
         RandomAccessFile apk = new RandomAccessFile(apkFile, "r");
         return ApkSignatureSchemeV2Verifier.findSignature(apk);
     }
 
+    /**
+     * 签名 block content 解析出来的证书信息
+     *
+     * @param apkFile apk文件路径
+     * @return 证书信息
+     * @throws IOException                IO异常
+     * @throws SignatureNotFoundException 签名不存在异常
+     */
     public static X509Certificate[][] verify(String apkFile) throws IOException, SignatureNotFoundException {
         return ApkSignatureSchemeV2Verifier.verify(apkFile);
     }
 
-    /**** 返回公钥的MD5值*/
+    /**
+     * 获取第一个签名证书公钥的 MD5 值
+     *
+     * @param apkFile apk文件路径
+     * @return MD5 值
+     */
     public static String publicKeyString(String apkFile) {
         String keyString = "";
 
