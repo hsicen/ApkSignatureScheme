@@ -68,7 +68,7 @@ public class V2SchemeUtil {
             if (signs != null && signs.length > 0) {
                 String baseStr = Base64.encodeToString(signs[0][0].getPublicKey().getEncoded(), Base64.DEFAULT);
                 keyString = MD5Util.encoding(baseStr);
-                System.out.println("签名MD5: " + keyString);
+                System.out.println("v2签名MD5: " + keyString);
             }
         } catch (SignatureNotFoundException | IOException e) {
             e.printStackTrace();

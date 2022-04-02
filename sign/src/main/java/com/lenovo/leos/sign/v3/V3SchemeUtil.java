@@ -71,7 +71,7 @@ public class V3SchemeUtil {
 
                 String baseStr = Base64.encodeToString(certs[0].getPublicKey().getEncoded(), Base64.DEFAULT);
                 keyString = MD5Util.encoding(baseStr);
-                System.out.println("签名MD5: " + keyString);
+                System.out.println("v3签名MD5: " + keyString);
             }
         } catch (SignatureNotFoundException | IOException e) {
             e.printStackTrace();
